@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+use Spatie\Permission\Traits\HasRoles;
+
+#[Fillable(['name', 'email', 'password', 'profile_image', 'status'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * Get the attributes that should be cast.
@@ -28,5 +30,16 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the profile image URL.
+     */
+    public function getProfileImageAttribute($value)
+    {
+        if ($value) {
+            return asset('storage/' . $value);
+        }
+        return asset('backend/images/layout_img/user_img.jpg'); // Default placeholder
     }
 }
