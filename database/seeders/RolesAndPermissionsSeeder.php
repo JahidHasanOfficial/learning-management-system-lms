@@ -10,102 +10,106 @@ use Illuminate\Support\Facades\Hash;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Define ALL granular permissions
+        // Define Permissions
         $permissions = [
-            'dashboard access',
-
-            // User Management 
-            'user.index', 'user.create', 'user.store', 'user.show', 'user.edit', 'user.update', 'user.destroy',
-
-            // Role Management
-            'role.index', 'role.create', 'role.store', 'role.show', 'role.edit', 'role.update', 'role.destroy',
-
             // Course Management
-            'course.index', 'course.create', 'course.store', 'course.show', 'course.edit', 'course.update', 'course.destroy',
-            'course.category', 'course.enroll',
-
-            // Subscription Management
-            'subscription.index', 'subscription.create', 'subscription.store', 'subscription.show', 'subscription.edit', 'subscription.update', 'subscription.destroy',
-
-            // Student Management
-            'student.index', 'student.show', 'student.progress',
-
-            // Job Placement
-            'job.index', 'job.create', 'job.store', 'job.show', 'job.edit', 'job.update', 'job.destroy',
+            'course.index', 'course.create', 'course.store', 'course.edit', 'course.update', 'course.destroy',
+            'course.category', 'curriculum.manage',
+            
+            // Role Management
+            'role.index', 'role.create', 'role.store', 'role.edit', 'role.update', 'role.destroy',
+            
+            // User Management
+            'user.index', 'user.create', 'user.store', 'user.edit', 'user.show', 'user.update', 'user.destroy',
+            
+            // Live Class
+            'live_class.index', 'live_class.create', 'live_class.store', 'live_class.show', 'live_class.edit', 'live_class.update', 'live_class.destroy',
+            
+            // Student Permissions
+            'student.my-courses', 'student.player',
+            
+            // Profile
+            'profile.edit', 'profile.update', 'profile.destroy',
         ];
 
         foreach ($permissions as $permission) {
             Permission::findOrCreate($permission);
         }
 
-        // create roles and assign existing permissions
-        $roleSuperAdmin = Role::findOrCreate('Super Admin');
-        $roleAdmin = Role::findOrCreate('Admin');
-        $roleInstructor = Role::findOrCreate('Instructor');
-        $roleStudent = Role::findOrCreate('Student');
+        // Create Roles and Assign Permissions
+        
+        // Super Admin: All permissions
+        $superAdminRole = Role::findOrCreate('Super Admin');
+        $superAdminRole->syncPermissions(Permission::all());
 
-        $roleSuperAdmin->givePermissionTo(Permission::all());
+        // Admin: Most permissions
+        $adminRole = Role::findOrCreate('Admin');
+        $adminRole->syncPermissions(Permission::all());
 
-        $roleAdmin->givePermissionTo([
-            'dashboard access',
-            'user.index', 'user.show',
-            'course.index', 'course.show',
-            'subscription.index', 'subscription.show',
-            'student.index', 'student.show',
-            'job.index', 'job.show',
+        // Instructor: Course and Live Class management
+        $instructorRole = Role::findOrCreate('Instructor');
+        $instructorRole->syncPermissions([
+            'course.index', 'course.create', 'course.store', 'course.edit', 'course.update', 'course.destroy',
+            'curriculum.manage',
+            'live_class.index', 'live_class.create', 'live_class.store', 'live_class.show', 'live_class.edit', 'live_class.update', 'live_class.destroy',
+            'profile.edit', 'profile.update',
         ]);
 
-        $roleInstructor->givePermissionTo([
-            'dashboard access',
-            'course.index', 'course.create', 'course.store', 'course.edit', 'course.update',
-            'student.index', 'student.show',
+        // Student: Learning permissions
+        $studentRole = Role::findOrCreate('Student');
+        $studentRole->syncPermissions([
+            'student.my-courses', 'student.player',
+            'profile.edit', 'profile.update',
         ]);
 
-        $roleStudent->givePermissionTo([
-            'dashboard access',
-            'course.index', 'course.show', 'course.enroll',
-            'student.progress',
-        ]);
-
-        // Create a default super admin user if not exists
-        $admin = User::updateOrCreate(
+        // Create Default Users
+        
+        // Super Admin
+        $superAdmin = User::updateOrCreate(
             ['email' => 'admin@gmail.com'],
             [
                 'name' => 'Super Admin',
                 'password' => Hash::make('password'),
+                'phone' => '01700000000',
                 'status' => 'active',
+                'email_verified_at' => now(),
             ]
         );
-        $admin->assignRole($roleSuperAdmin);
+        $superAdmin->assignRole($superAdminRole);
 
-        // Create a default instructor user
-        $instructor = User::updateOrCreate(
-            ['email' => 'instructor@gmail.com'],
-            [
-                'name' => 'Jahid Instructor',
-                'password' => Hash::make('password'),
-                'status' => 'active',
-            ]
-        );
-        $instructor->assignRole($roleInstructor);
+        // Seed 10 Instructors
+        for ($i = 1; $i <= 10; $i++) {
+            $instructor = User::updateOrCreate(
+                ['email' => "instructor{$i}@gmail.com"],
+                [
+                    'name' => "Instructor " . $i,
+                    'password' => Hash::make('password'),
+                    'phone' => '018' . str_pad($i, 8, '0', STR_PAD_LEFT),
+                    'status' => 'active',
+                    'email_verified_at' => now(),
+                ]
+            );
+            $instructor->assignRole($instructorRole);
+        }
 
-        // Create a default student user
-        $student = User::updateOrCreate(
-            ['email' => 'student@gmail.com'],
-            [
-                'name' => 'Hasan Student',
-                'password' => Hash::make('password'),
-                'status' => 'active',
-            ]
-        );
-        $student->assignRole($roleStudent);
+        // Seed 20 Students
+        for ($i = 1; $i <= 20; $i++) {
+            $student = User::updateOrCreate(
+                ['email' => "student{$i}@gmail.com"],
+                [
+                    'name' => "Student " . $i,
+                    'password' => Hash::make('password'),
+                    'phone' => '019' . str_pad($i, 8, '0', STR_PAD_LEFT),
+                    'status' => 'active',
+                    'email_verified_at' => now(),
+                ]
+            );
+            $student->assignRole($studentRole);
+        }
     }
 }

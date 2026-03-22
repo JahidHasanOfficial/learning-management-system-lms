@@ -19,8 +19,11 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->default(0.00);
             $table->string('thumbnail')->nullable();
             $table->foreignId('instructor_id')->constrained('users')->onDelete('cascade');
-            $table->enum('status', ['draft', 'published'])->default('draft');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->string('career_path')->nullable(); 
+            $table->enum('status', ['draft', 'published', 'pending_approval', 'rejected'])->default('draft');
             $table->boolean('is_featured')->default(false);
+            $table->json('tags')->nullable();
             $table->timestamps();
         });
 
@@ -28,7 +31,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('progress')->default(0); // 0-100 percentage
+            $table->integer('progress')->default(0); 
             $table->enum('status', ['enrolled', 'ongoing', 'completed'])->default('enrolled');
             $table->timestamp('enrolled_at')->nullable();
             $table->timestamp('completed_at')->nullable();
@@ -41,6 +44,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('course_user');
         Schema::dropIfExists('courses');
     }
 };

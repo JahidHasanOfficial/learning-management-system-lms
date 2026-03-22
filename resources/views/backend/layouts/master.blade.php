@@ -4,7 +4,7 @@
       @include('backend.layouts.partials.head')
       @stack('styles')
    </head>
-   <body class="dashboard dashboard_1">
+   <body class="dashboard dashboard_1 {{ session('dark_mode') ? 'dark_mode' : '' }}">
       <div class="full_container">
          <div class="inner_container">
             <!-- Sidebar  -->
@@ -28,6 +28,19 @@
          </div>
       </div>
       @include('backend.layouts.partials.scripts')
+      <script>
+          // Simple dark mode toggle logic
+          document.addEventListener('DOMContentLoaded', () => {
+              if (localStorage.getItem('theme') === 'dark') {
+                  document.body.classList.add('dark_mode');
+              }
+          });
+          
+          window.toggleDarkMode = function() {
+              document.body.classList.toggle('dark_mode');
+              localStorage.setItem('theme', document.body.classList.contains('dark_mode') ? 'dark' : 'light');
+          }
+      </script>
       @stack('scripts')
    </body>
 </html>

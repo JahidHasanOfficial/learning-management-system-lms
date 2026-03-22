@@ -20,9 +20,9 @@ class UserController extends Controller
     /**
      * Display a listing of the users.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->userService->getAllUsers();
+        $users = $this->userService->getAllUsers($request->only('search'));
         return view('backend.pages.users.index', compact('users'));
     }
 

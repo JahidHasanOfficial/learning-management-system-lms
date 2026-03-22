@@ -37,9 +37,35 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
+                                <label>Category</label>
+                                <select name="category_id" class="form-control" required>
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Assign Instructors (Multiple)</label>
+                                <select name="instructor_ids[]" class="form-control" multiple style="height: 100px;">
+                                    @foreach($instructors as $instructor)
+                                        <option value="{{ $instructor->id }}" {{ (is_array(old('instructor_ids')) && in_array($instructor->id, old('instructor_ids'))) || (!old('instructor_ids') && $instructor->id == auth()->id()) ? 'selected' : '' }}>{{ $instructor->name }}</option>
+                                    @endforeach
+                                </select>
+                                <small class="form-text text-muted text-info">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Career Path (e.g. Web Development)</label>
+                                <input type="text" name="career_path" class="form-control" placeholder="Optional" value="{{ old('career_path') }}">
+                            </div>
+                            <div class="form-group">
                                 <label>Price</label>
                                 <input type="number" name="price" class="form-control" placeholder="0.00" value="{{ old('price') }}" required step="0.01">
                                 @error('price') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Tags (Comma separated)</label>
+                                <input type="text" name="tags" class="form-control" placeholder="php, laravel, coding" value="{{ old('tags') }}">
                             </div>
                             <div class="form-group">
                                 <label>Thumbnail</label>
@@ -50,6 +76,7 @@
                                 <label>Status</label>
                                 <select name="status" class="form-control">
                                     <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                                    <option value="pending_approval" {{ old('status') == 'pending_approval' ? 'selected' : '' }}>Pending Approval</option>
                                     <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Published</option>
                                 </select>
                                 @error('status') <span class="text-danger">{{ $message }}</span> @enderror

@@ -51,10 +51,40 @@
                                 @error('thumbnail') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                             <div class="form-group">
+                                <label>Category</label>
+                                <select name="category_id" class="form-control" required>
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{ old('category_id', $course->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Assign Instructors (Multiple)</label>
+                                <select name="instructor_ids[]" class="form-control" multiple style="height: 100px;">
+                                    @foreach($instructors as $instructor)
+                                        <option value="{{ $instructor->id }}" 
+                                            {{ (is_array(old('instructor_ids')) && in_array($instructor->id, old('instructor_ids'))) || (!old('instructor_ids') && $course->instructors->contains($instructor->id)) ? 'selected' : '' }}>
+                                            {{ $instructor->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <small class="form-text text-muted text-info">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Career Path</label>
+                                <input type="text" name="career_path" class="form-control" value="{{ old('career_path', $course->career_path) }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Tags (Comma separated)</label>
+                                <input type="text" name="tags" class="form-control" value="{{ old('tags', is_array($course->tags) ? implode(',', $course->tags) : $course->tags) }}">
+                            </div>
+                            <div class="form-group">
                                 <label>Status</label>
                                 <select name="status" class="form-control">
                                     <option value="draft" {{ old('status', $course->status) == 'draft' ? 'selected' : '' }}>Draft</option>
                                     <option value="published" {{ old('status', $course->status) == 'published' ? 'selected' : '' }}>Published</option>
+                                    <option value="pending_approval" {{ old('status', $course->status) == 'pending_approval' ? 'selected' : '' }}>Pending Approval</option>
                                 </select>
                                 @error('status') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>

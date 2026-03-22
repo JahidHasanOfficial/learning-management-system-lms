@@ -11,9 +11,19 @@ class UserService
     /**
      * Get all users.
      */
-    public function getAllUsers()
+    public function getAllUsers(array $filters = [])
     {
-        return User::with('roles')->latest()->paginate(10);
+        $query = User::with('roles');
+
+        if (isset($filters['search'])) {
+            $query->where(function($q) use ($filters) {
+                $q->where('name', 'LIKE', '%' . $filters['search'] . '%')
+                  ->orWhere('email', 'LIKE', '%' . $filters['search'] . '%')
+                  ->orWhere('phone', 'LIKE', '%' . $filters['search'] . '%');
+            });
+        }
+
+        return $query->latest()->paginate(10);
     }
 
     /**

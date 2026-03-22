@@ -9,6 +9,8 @@ use App\Models\Course;
 use App\Services\CourseService;
 use Illuminate\Http\Request;
 
+use App\Models\Category;
+
 class CourseController extends Controller
 {
     protected $courseService;
@@ -21,9 +23,14 @@ class CourseController extends Controller
     /**
      * Display a listing of the courses.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $courses = $this->courseService->getAllCourses();
+        $filters = $request->only(['status', 'category_id', 'search']);
+        if (auth()->user()->hasRole('Instructor')) {
+            $filters['instructor_id'] = auth()->id();
+        }
+
+        $courses = $this->courseService->getAllCourses($filters);
         return view('backend.pages.courses.index', compact('courses'));
     }
 
@@ -32,7 +39,18 @@ class CourseController extends Controller
      */
     public function create()
     {
-        return view('backend.pages.courses.create');
+        $categories = Category::all();
+        $instructors = \App\Models\User::role('Instructor')->get();
+        return view('backend.pages.courses.create', compact('categories', 'instructors'));
+    }
+
+    /**
+     * Display the specified course details.
+     */
+    public function show(Course $course)
+    {
+        $course->load(['category', 'instructor', 'sections.lessons', 'batches', 'reviews.user']);
+        return view('backend.pages.courses.show', compact('course'));
     }
 
     /**
@@ -40,13 +58,7 @@ class CourseController extends Controller
      */
     public function store(StoreCourseRequest $request)
     {
-        $data = $request->validated();
-        
-        if ($request->hasFile('thumbnail')) {
-            $data['thumbnail'] = \App\Helpers\ImageHelper::create($request->file('thumbnail'), 'courses');
-        }
-
-        $this->courseService->storeCourse($data);
+        $this->courseService->storeCourse($request->validated());
 
         return redirect()->route('course.index')
             ->with('success', 'Course created successfully.');
@@ -57,7 +69,9 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        return view('backend.pages.courses.edit', compact('course'));
+        $categories = Category::all();
+        $instructors = \App\Models\User::role('Instructor')->get();
+        return view('backend.pages.courses.edit', compact('course', 'categories', 'instructors'));
     }
 
     /**

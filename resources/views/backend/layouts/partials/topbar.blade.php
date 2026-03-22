@@ -8,6 +8,7 @@
          <div class="right_topbar">
             <div class="icon_info">
                <ul>
+                  <li><a href="javascript:void(0)" onclick="toggleDarkMode()"><i class="fa fa-moon-o"></i></a></li>
                   <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
                   <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
                   <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>

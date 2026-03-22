@@ -60,4 +60,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(LoginHistory::class);
     }
+
+    /**
+     * Get the courses that the user is instructing.
+     */
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_instructor')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
 }
