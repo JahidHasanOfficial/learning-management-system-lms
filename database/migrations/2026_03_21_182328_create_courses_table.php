@@ -23,6 +23,17 @@ return new class extends Migration
             $table->boolean('is_featured')->default(false);
             $table->timestamps();
         });
+
+        Schema::create('course_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->integer('progress')->default(0); // 0-100 percentage
+            $table->enum('status', ['enrolled', 'ongoing', 'completed'])->default('enrolled');
+            $table->timestamp('enrolled_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**

@@ -33,6 +33,18 @@
           <label class="label_field hidden">hidden label</label>
           <button class="main_bt">Sign In</button>
        </div>
+
+       <div class="field mt-3">
+          <div class="text-center">
+             <p>Or sign in with:</p>
+             <div class="social_login_buttons d-flex justify-content-center">
+                <a href="{{ route('social.redirect', 'google') }}" class="btn btn-outline-danger mx-1"><i class="fa fa-google"></i></a>
+                <a href="{{ route('social.redirect', 'facebook') }}" class="btn btn-outline-primary mx-1"><i class="fa fa-facebook"></i></a>
+                <a href="{{ route('social.redirect', 'linkedin') }}" class="btn btn-outline-info mx-1"><i class="fa fa-linkedin"></i></a>
+             </div>
+          </div>
+       </div>
     </fieldset>
 </form>
+
 @endsection

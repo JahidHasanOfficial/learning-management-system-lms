@@ -22,6 +22,15 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+    // OTP Verification Routes
+    Route::get('verify-otp', [\App\Http\Controllers\Auth\OtpController::class, 'showVerifyForm'])->name('otp.verify');
+    Route::post('verify-otp', [\App\Http\Controllers\Auth\OtpController::class, 'verify'])->name('otp.verify.submit');
+    Route::get('resend-otp', [\App\Http\Controllers\Auth\OtpController::class, 'resend'])->name('otp.resend');
+
+    // Social Login Routes
+    Route::get('auth/{provider}', [\App\Http\Controllers\Auth\SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
+    Route::get('auth/{provider}/callback', [\App\Http\Controllers\Auth\SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
+
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 

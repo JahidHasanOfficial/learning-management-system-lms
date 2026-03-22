@@ -43,4 +43,21 @@ class User extends Authenticatable
         }
         return asset('backend/images/layout_img/user_img.jpg'); // Default placeholder
     }
+    /**
+     * Get the enrolled courses of the user.
+     */
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class)
+            ->withPivot('progress', 'status', 'enrolled_at', 'completed_at')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the login history of the user.
+     */
+    public function loginHistories()
+    {
+        return $this->hasMany(LoginHistory::class);
+    }
 }

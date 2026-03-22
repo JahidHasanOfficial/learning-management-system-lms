@@ -27,4 +27,14 @@ class Course extends Model
     {
         return $this->belongsTo(User::class, 'instructor_id');
     }
+
+    /**
+     * Get the students of the course.
+     */
+    public function students()
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot('progress', 'status', 'enrolled_at', 'completed_at')
+            ->withTimestamps();
+    }
 }
