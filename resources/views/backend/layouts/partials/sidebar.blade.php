@@ -8,7 +8,7 @@
       <div class="sidebar_user_info">
          <div class="icon_setting"></div>
          <div class="user_profle_side">
-            <div class="user_img"><img class="img-responsive" src="{{ asset('backend/images/layout_img/user_img.jpg') }}" alt="#" /></div>
+            <div class="user_img"><img class="img-responsive rounded-circle" src="{{ Auth::user()->profile_image }}" alt="#" style="width: 45px; height: 45px; object-fit: cover;" /></div>
             <div class="user_info">
                <h6>{{ Auth::user()->name ?? 'Guest' }}</h6>
                <p><span class="online_animation"></span> Online</p>
@@ -19,16 +19,16 @@
    <div class="sidebar_blog_2">
       <h4>General</h4>
       <ul class="list-unstyled components">
-         <li class="active">
+         <li class="{{ Route::is('dashboard') ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
          </li>
          <!-- Course Management -->
-         <li>
-            <a href="#courses" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-book purple_color"></i> <span>Courses</span></a>
-            <ul class="collapse list-unstyled" id="courses">
-               <li><a href="{{ route('course.index') }}">> <span>All Courses</span></a></li>
+         <li class="{{ request()->is('course*') ? 'active' : '' }}">
+            <a href="#courses" data-toggle="collapse" aria-expanded="{{ request()->is('course*') ? 'true' : 'false' }}" class="dropdown-toggle"><i class="fa fa-book purple_color"></i> <span>Courses</span></a>
+            <ul class="collapse list-unstyled {{ request()->is('course*') ? 'show' : '' }}" id="courses">
+               <li class="{{ request()->is('course') ? 'active' : '' }}"><a href="{{ route('course.index') }}">> <span>All Courses</span></a></li>
                <li><a href="#">> <span>Categories</span></a></li>
-               <li><a href="{{ route('course.create') }}">> <span>Add New Course</span></a></li>
+               <li class="{{ request()->is('course/create') ? 'active' : '' }}"><a href="{{ route('course.create') }}">> <span>Add New Course</span></a></li>
             </ul>
          </li>
          
@@ -49,11 +49,11 @@
          
          <!-- User & Role Management (Admin only) -->
          @role('Super Admin|Admin')
-         <li>
-            <a href="#user_mgmt" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-cog yellow_color"></i> <span>Management</span></a>
-            <ul class="collapse list-unstyled" id="user_mgmt">
-               <li><a href="#">> <span>Users</span></a></li>
-               <li><a href="#">> <span>Roles & Permissions</span></a></li>
+         <li class="{{ request()->is('user*') || request()->is('role*') ? 'active' : '' }}">
+            <a href="#user_mgmt" data-toggle="collapse" aria-expanded="{{ request()->is('user*') || request()->is('role*') ? 'true' : 'false' }}" class="dropdown-toggle"><i class="fa fa-cog yellow_color"></i> <span>Management</span></a>
+            <ul class="collapse list-unstyled {{ request()->is('user*') || request()->is('role*') ? 'show' : '' }}" id="user_mgmt">
+               <li class="{{ request()->is('user*') ? 'active' : '' }}"><a href="{{ route('user.index') }}">> <span>Users</span></a></li>
+               <li class="{{ request()->is('role*') ? 'active' : '' }}"><a href="{{ route('role.index') }}">> <span>Roles & Permissions</span></a></li>
             </ul>
          </li>
          @endrole

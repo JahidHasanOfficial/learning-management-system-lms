@@ -15,6 +15,7 @@ class DashboardController extends Controller
         $data['total_instructors'] = User::role('Instructor')->count();
         $data['total_courses'] = Course::count();
         $data['total_admins'] = User::role(['Admin', 'Super Admin'])->count();
+        $data['recent_logins'] = \App\Models\LoginHistory::with('user')->latest()->limit(10)->get();
         
         return view('backend.pages.dashboard', $data);
     }

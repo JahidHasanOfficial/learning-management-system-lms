@@ -295,33 +295,29 @@
    <div class="dash_blog">
       <div class="dash_blog_inner">
          <div class="dash_head">
-            <h3><span><i class="fa fa-comments-o"></i> Updates</span><span class="plus_green_bt"><a href="#">+</a></span></h3>
+            <h3><span><i class="fa fa-history"></i> Recent Login History</span><span class="plus_green_bt"><a href="#">+</a></span></h3>
          </div>
          <div class="list_cont">
-            <p>User confirmation</p>
+            <p>User Analytics</p>
          </div>
          <div class="msg_list_main">
             <ul class="msg_list">
+               @forelse($recent_logins as $login)
                <li>
-                  <span><img src="{{ asset('backend/images/layout_img/msg2.png') }}" class="img-responsive" alt="#" /></span>
+                  <span><img src="{{ $login->user->profile_image }}" class="img-responsive rounded-circle" alt="#" style="width: 40px; height: 40px; object-fit: cover;" /></span>
                   <span>
-                  <span class="name_user">John Smith</span>
-                  <span class="msg_user">Sed ut perspiciatis unde omnis.</span>
-                  <span class="time_ago">12 min ago</span>
+                  <span class="name_user">{{ $login->user->name }}</span>
+                  <span class="msg_user">Logged in from <strong>{{ $login->ip_address }}</strong></span>
+                  <span class="time_ago">{{ $login->login_at->diffForHumans() }}</span>
                   </span>
                </li>
-               <li>
-                  <span><img src="{{ asset('backend/images/layout_img/msg3.png') }}" class="img-responsive" alt="#" /></span>
-                  <span>
-                  <span class="name_user">John Smith</span>
-                  <span class="msg_user">On the other hand, we denounce.</span>
-                  <span class="time_ago">12 min ago</span>
-                  </span>
-               </li>
+               @empty
+               <li class="text-center p-3">No login history found.</li>
+               @endforelse
             </ul>
          </div>
          <div class="read_more">
-            <div class="center"><a class="main_bt read_bt" href="#">Read More</a></div>
+            <div class="center"><a class="main_bt read_bt" href="#">View All</a></div>
          </div>
       </div>
    </div>

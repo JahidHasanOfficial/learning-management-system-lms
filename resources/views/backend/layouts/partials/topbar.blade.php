@@ -14,9 +14,9 @@
                </ul>
                <ul class="user_profile_dd">
                   <li>
-                     <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{ asset('backend/images/layout_img/user_img.jpg') }}" alt="#" /><span class="name_user">{{ Auth::user()->name ?? 'Guest' }}</span></a>
+                     <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{ Auth::user()->profile_image }}" alt="#" style="width: 35px; height: 35px; object-fit: cover;" /><span class="name_user">{{ Auth::user()->name ?? 'Guest' }}</span></a>
                      <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">My Profile</a>
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}">My Profile</a>
                         <a class="dropdown-item" href="#">Settings</a>
                         <a class="dropdown-item" href="#">Help</a>
                         <form method="POST" action="{{ route('logout') }}">

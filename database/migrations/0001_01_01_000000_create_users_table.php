@@ -18,7 +18,16 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('profile_image')->nullable();
-            $table->enum('status', ['active', 'inactive', 'pending'])->default('active');
+            $table->string('phone')->nullable();
+            $table->timestamp('phone_verified_at')->nullable();
+            $table->string('otp_code')->nullable();
+            $table->timestamp('otp_expires_at')->nullable();
+            $table->string('provider')->nullable();
+            $table->string('provider_id')->nullable();
+            $table->text('address')->nullable();
+            $table->text('bio')->nullable();
+            $table->json('skills')->nullable();
+            $table->enum('status', ['active', 'inactive', 'pending', 'suspended'])->default('active');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -16,7 +16,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
+        return view('backend.pages.profile.edit', [
             'user' => $request->user(),
         ]);
     }
@@ -26,15 +26,26 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $data = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($request->hasFile('profile_image')) {
+            $data['profile_image'] = \App\Helpers\ImageHelper::update($request->file('profile_image'), 'users', $user->profile_image);
         }
 
-        $request->user()->save();
+        if ($request->has('skills_input')) {
+            $data['skills'] = array_map('trim', explode(',', $request->skills_input));
+        }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $user->fill($data);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return Redirect::route('profile.edit')->with('success', 'Profile updated successfully.');
     }
 
     /**
