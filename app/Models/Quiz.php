@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Quiz extends Model
+{
+    protected $fillable = ['course_id', 'title', 'description', 'time_limit', 'pass_percentage', 'status'];
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(QuizQuestion::class);
+    }
+
+    public function submissions()
+    {
+        return $this->hasMany(QuizSubmission::class);
+    }
+}

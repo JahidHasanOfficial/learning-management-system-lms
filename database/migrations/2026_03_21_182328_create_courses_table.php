@@ -27,16 +27,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('course_user', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('course_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('progress')->default(0); 
-            $table->enum('status', ['enrolled', 'ongoing', 'completed'])->default('enrolled');
-            $table->timestamp('enrolled_at')->nullable();
-            $table->timestamp('completed_at')->nullable();
-            $table->timestamps();
-        });
     }
 
     /**
@@ -44,7 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_user');
         Schema::dropIfExists('courses');
     }
 };

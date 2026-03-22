@@ -56,10 +56,37 @@
             </ul>
          </li>
          @endrole
-         
-         <!-- Job Placement -->
+
+         <!-- Assessment Module -->
+         @role('Instructor|Admin|Super Admin')
+         <li class="{{ request()->is('quiz*') || request()->is('assignment*') ? 'active' : '' }}">
+            <a href="#assessments" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-pencil blue1_color"></i> <span>Assessments</span></a>
+            <ul class="collapse list-unstyled {{ request()->is('quiz*') || request()->is('assignment*') ? 'show' : '' }}" id="assessments">
+               <li class="{{ request()->is('quiz*') ? 'active' : '' }}"><a href="{{ route('quiz.index') }}">> <span>Quizzes</span></a></li>
+               <li class="{{ request()->is('assignment*') ? 'active' : '' }}"><a href="{{ route('assignment.index') }}">> <span>Assignments</span></a></li>
+            </ul>
+         </li>
+         @endrole
+
+         <!-- Support Module -->
+         <li>
+            <a href="#support" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-life-ring green_color"></i> <span>Support</span></a>
+            <ul class="collapse list-unstyled {{ request()->is('ticket*') ? 'show' : '' }}" id="support">
+               <li><a href="#">> <span>Support Tickets</span></a></li>
+               <li><a href="#">> <span>Consultations</span></a></li>
+            </ul>
+         </li>
+
+         <!-- Finance Module -->
          @role('Admin|Super Admin')
-         <li><a href="#"><i class="fa fa-briefcase blue1_color"></i> <span>Job Placement</span></a></li>
+         <li class="{{ request()->is('payment*') || request()->is('coupon*') ? 'active' : '' }}">
+            <a href="#finance" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-money red_color"></i> <span>Finance</span></a>
+            <ul class="collapse list-unstyled {{ request()->is('payment*') || request()->is('coupon*') || request()->is('invoice*') ? 'show' : '' }}" id="finance">
+               <li><a href="#">> <span>Payments</span></a></li>
+               <li><a href="#">> <span>Invoices</span></a></li>
+               <li><a href="#">> <span>Coupons</span></a></li>
+            </ul>
+         </li>
          @endrole
          
          <!-- User & Role Management (Admin only) -->

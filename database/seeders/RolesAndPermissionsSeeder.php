@@ -32,6 +32,17 @@ class RolesAndPermissionsSeeder extends Seeder
             
             // Student Permissions
             'student.my-courses', 'student.player',
+
+            // Assessment module
+            'quiz.index', 'quiz.create', 'quiz.store',
+            'assignment.index', 'assignment.submissions', 'assignment.grade',
+            
+            // Support & Mentorship
+            'support.index', 'support.show', 'support.reply',
+            'mentorship.index', 'mentorship.store', 'mentorship.slots',
+            
+            // Payment & Enrollment
+            'payment.index',
             
             // Profile
             'profile.edit', 'profile.update', 'profile.destroy',
@@ -57,6 +68,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'course.index', 'course.create', 'course.store', 'course.edit', 'course.update', 'course.destroy',
             'curriculum.manage',
             'live_class.index', 'live_class.create', 'live_class.store', 'live_class.show', 'live_class.edit', 'live_class.update', 'live_class.destroy',
+            'quiz.index', 'quiz.create', 'quiz.store',
+            'assignment.index', 'assignment.submissions', 'assignment.grade',
+            'support.index', 'support.show', 'support.reply',
+            'mentorship.index', 'mentorship.store', 'mentorship.slots',
             'profile.edit', 'profile.update',
         ]);
 

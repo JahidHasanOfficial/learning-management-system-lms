@@ -10,6 +10,10 @@ use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\CurriculumController;
 use App\Http\Controllers\Backend\LiveClassController;
 use App\Http\Controllers\Backend\StudentController as BackendStudentController;
+use App\Http\Controllers\Backend\AssessmentController;
+use App\Http\Controllers\Backend\SupportController;
+use App\Http\Controllers\Backend\PaymentController;
+use App\Http\Controllers\Backend\MentorshipController;
 use App\Http\Controllers\Student\LearningController;
 
 use App\Http\Controllers\HomeController;
@@ -59,6 +63,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('students/progress', [BackendStudentController::class, 'progress'])->name('student.progress')->middleware('permission:user.show');
     Route::get('students/{user}', [BackendStudentController::class, 'show'])->name('student.show_backend')->middleware('permission:user.show');
    
+    // Assessment Module (Backend)
+    Route::get('quizzes', [AssessmentController::class, 'quizIndex'])->name('quiz.index')->middleware('permission:quiz.index');
+    Route::get('quizzes/create', [AssessmentController::class, 'quizCreate'])->name('quiz.create')->middleware('permission:quiz.create');
+    Route::post('quizzes', [AssessmentController::class, 'quizStore'])->name('quiz.store')->middleware('permission:quiz.store');
+    Route::get('assignments', [AssessmentController::class, 'assignmentIndex'])->name('assignment.index')->middleware('permission:assignment.index');
+    Route::get('assignments/{assignment}/submissions', [AssessmentController::class, 'assignmentSubmissions'])->name('assignment.submissions')->middleware('permission:assignment.submissions');
+    Route::post('submissions/{submission}/grade', [AssessmentController::class, 'gradeSubmission'])->name('assignment.grade')->middleware('permission:assignment.grade');
+    
     // Live Class Module
     Route::get('live-class', [LiveClassController::class, 'index'])->name('live-class.index')->middleware('permission:live_class.index');
     Route::get('live-class/create', [LiveClassController::class, 'create'])->name('live-class.create')->middleware('permission:live_class.create');
@@ -81,6 +93,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('learning/{course:slug}/{lesson?}', [LearningController::class, 'player'])->name('student.player')->middleware('permission:student.player');
     Route::post('lesson/{lesson}/complete', [LearningController::class, 'completeLesson'])->middleware('permission:student.player');
     Route::post('lesson/{lesson}/bookmark', [LearningController::class, 'saveBookmark'])->middleware('permission:student.player');
+
+    // Support & Mentorship Module
+    Route::get('support-tickets', [SupportController::class, 'index'])->name('support.index')->middleware('permission:support.index');
+    Route::get('support-tickets/{ticket}', [SupportController::class, 'show'])->name('support.show')->middleware('permission:support.show');
+    Route::post('support-tickets/{ticket}/reply', [SupportController::class, 'reply'])->name('support.reply')->middleware('permission:support.reply');
+    
+    Route::get('mentor-assignments', [MentorshipController::class, 'index'])->name('mentorship.index')->middleware('permission:mentorship.index');
+    Route::post('mentor-assignments', [MentorshipController::class, 'store'])->name('mentorship.store')->middleware('permission:mentorship.store');
+    Route::get('consultation-slots', [MentorshipController::class, 'slots'])->name('mentorship.slots')->middleware('permission:mentorship.slots');
+
+    // Payment & Enrollment Module
+    Route::get('payments', [PaymentController::class, 'index'])->name('payment.index')->middleware('permission:payment.index');
+    Route::get('invoices', [PaymentController::class, 'invoices'])->name('invoice.index')->middleware('permission:payment.index');
+    Route::get('invoices/{invoice}/download', [PaymentController::class, 'invoiceDownload'])->name('invoice.download')->middleware('permission:payment.index');
+    Route::get('coupons', [PaymentController::class, 'coupons'])->name('coupon.index')->middleware('permission:payment.index');
+    Route::get('refund-requests', [PaymentController::class, 'refundRequests'])->name('refund.index')->middleware('permission:payment.index');
+    Route::post('refund-requests/{refundRequest}/process', [PaymentController::class, 'refundProcess'])->name('refund.process')->middleware('permission:payment.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('permission:profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('permission:profile.update');

@@ -15,6 +15,11 @@ class LiveClass extends Model
         'join_url', 'provider', 'recording_url', 'is_archived'
     ];
 
+    protected $casts = [
+        'start_time' => 'datetime',
+        'is_archived' => 'boolean',
+    ];
+
     public function course()
     {
         return $this->belongsTo(Course::class);
