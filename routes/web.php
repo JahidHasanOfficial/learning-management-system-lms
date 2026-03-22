@@ -9,21 +9,22 @@ use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\CurriculumController;
 use App\Http\Controllers\Backend\LiveClassController;
-use App\Http\Controllers\Backend\InstructorController;
+use App\Http\Controllers\Backend\StudentController as BackendStudentController;
 use App\Http\Controllers\Student\LearningController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\HomeController;
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/course/{slug}', [HomeController::class, 'courseDetails'])->name('course.details');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/course/{course}/enroll', [HomeController::class, 'enroll'])->name('course.enroll');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Course Management
     Route::get('course', [CourseController::class, 'index'])->name('course.index')->middleware('permission:course.index');
     Route::get('course/create', [CourseController::class, 'create'])->name('course.create')->middleware('permission:course.create');
     Route::post('course', [CourseController::class, 'store'])->name('course.store')->middleware('permission:course.store');
-    Route::get('course/{course}', [CourseController::class, 'show'])->name('course.show')->middleware('permission:course.index');
     Route::get('course/{course}/edit', [CourseController::class, 'edit'])->name('course.edit')->middleware('permission:course.edit');
     Route::put('course/{course}', [CourseController::class, 'update'])->name('course.update')->middleware('permission:course.update');
     Route::delete('course/{course}', [CourseController::class, 'destroy'])->name('course.destroy')->middleware('permission:course.destroy');
@@ -46,15 +47,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('user/{user}/status', [UserController::class, 'status'])->name('user.status')->middleware('permission:user.update');
     Route::delete('user/{user}', [UserController::class, 'destroy'])->name('user.destroy')->middleware('permission:user.destroy');
 
-    // Instructor Management
-    Route::get('instructors', [InstructorController::class, 'index'])->name('instructor.index')->middleware('permission:user.index');
-    Route::get('instructors/{user}', [InstructorController::class, 'show'])->name('instructor.show')->middleware('permission:user.index');
-
     // Course Curriculum Management
     Route::get('course/{course}/curriculum', [CurriculumController::class, 'index'])->name('course.curriculum')->middleware('permission:curriculum.manage');
     Route::post('course/{course}/section', [CurriculumController::class, 'storeSection'])->name('course.section.store')->middleware('permission:curriculum.manage');
     Route::post('section/{section}/lesson', [CurriculumController::class, 'storeLesson'])->name('course.lesson.store')->middleware('permission:curriculum.manage');
     Route::post('curriculum/reorder', [CurriculumController::class, 'reorder'])->name('course.curriculum.reorder')->middleware('permission:curriculum.manage');
+    
+    // Student Management (Backend)
+    Route::get('students', [BackendStudentController::class, 'index'])->name('student.index')->middleware('permission:user.show');
+    Route::get('students/enrollments', [BackendStudentController::class, 'enrollments'])->name('student.enrollments')->middleware('permission:user.show');
+    Route::get('students/progress', [BackendStudentController::class, 'progress'])->name('student.progress')->middleware('permission:user.show');
+    Route::get('students/{user}', [BackendStudentController::class, 'show'])->name('student.show_backend')->middleware('permission:user.show');
    
     // Live Class Module
     Route::get('live-class', [LiveClassController::class, 'index'])->name('live-class.index')->middleware('permission:live_class.index');
@@ -75,7 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Student Learning Module
     Route::get('my-courses', [LearningController::class, 'myCourses'])->name('student.my-courses')->middleware('permission:student.my-courses');
-    Route::get('learning/{course}/{lesson?}', [LearningController::class, 'player'])->name('student.player')->middleware('permission:student.player');
+    Route::get('learning/{course:slug}/{lesson?}', [LearningController::class, 'player'])->name('student.player')->middleware('permission:student.player');
     Route::post('lesson/{lesson}/complete', [LearningController::class, 'completeLesson'])->middleware('permission:student.player');
     Route::post('lesson/{lesson}/bookmark', [LearningController::class, 'saveBookmark'])->middleware('permission:student.player');
 

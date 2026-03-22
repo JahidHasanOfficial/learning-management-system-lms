@@ -36,25 +36,20 @@ class RegisteredUserController extends Controller
             'phone' => ['required', 'string', 'max:20', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-
-        $otp = rand(100000, 999999);
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'otp_code' => $otp,
-            'otp_expires_at' => now()->addMinutes(10),
-            'status' => 'pending',
+            'status' => 'active',
         ]);
 
         $user->assignRole('Student');
 
-        // Log the OTP for development purposes (In production, send SMS/Email)
-        \Log::info("OTP for {$user->email}: {$otp}");
+        event(new Registered($user));
 
-        return redirect()->route('otp.verify', ['email' => $user->email])
-            ->with('status', 'Please enter the OTP sent to your phone/email.');
+        Auth::login($user);
+
+        return redirect()->route('dashboard');
     }
 }

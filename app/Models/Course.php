@@ -63,16 +63,6 @@ class Course extends Model
         return $this->belongsTo(User::class, 'instructor_id');
     }
 
-    /**
-     * Get all instructors for the course.
-     */
-    public function instructors()
-    {
-        return $this->belongsToMany(User::class, 'course_instructor')
-            ->withPivot('role')
-            ->withTimestamps();
-    }
-
     public function students()
     {
         return $this->belongsToMany(User::class)
@@ -86,14 +76,19 @@ class Course extends Model
     public function getThumbnailAttribute($value)
     {
         if (!$value) {
-            return asset('backend/images/layout_img/pattern_h.png'); // Fallback to a pattern
+            return asset('frontend/img/course-1.jpg');
         }
 
         if (filter_var($value, FILTER_VALIDATE_URL)) {
             return $value;
         }
 
-        return asset('storage/' . $value);
+        // Check if file exists in storage/app/public
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($value)) {
+            return asset('storage/' . $value);
+        }
+
+        return asset('frontend/img/course-1.jpg');
     }
 
     /**

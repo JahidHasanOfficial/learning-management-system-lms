@@ -7,21 +7,9 @@
     <div class="col-md-12">
         <div class="white_shd full margin_bottom_30">
             <div class="full graph_head">
-                <div class="row w-100 align-items-center m-0">
-                    <div class="col-md-3 p-0">
-                        <div class="heading1 margin_0">
-                            <h2>User Management</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-6 p-0">
-                        <form action="{{ route('user.index') }}" method="GET" class="d-flex align-items-center">
-                            <input type="text" name="search" class="form-control rounded-pill mr-2" placeholder="Search by name, email or phone..." value="{{ request('search') }}">
-                            <button type="submit" class="btn btn-primary rounded-pill px-4"><i class="fa fa-search"></i></button>
-                        </form>
-                    </div>
-                    <div class="col-md-3 text-right p-0">
-                        <a href="{{ route('user.create') }}" class="btn btn-primary rounded-pill px-4 btn-sm"><i class="fa fa-plus"></i> Add New User</a>
-                    </div>
+                <div class="heading1 margin_0 d-flex justify-content-between w-100 align-items-center">
+                    <h2>User Management</h2>
+                    <a href="{{ route('user.create') }}" class="btn btn-primary px-4 btn-sm rounded-pill"><i class="fa fa-plus"></i> Add New User</a>
                 </div>
             </div>
             <div class="table_section padding_infor_info">

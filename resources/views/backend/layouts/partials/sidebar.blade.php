@@ -23,19 +23,22 @@
             <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard yellow_color"></i> <span>Dashboard</span></a>
          </li>
          <!-- Course Management -->
+         @role('Instructor|Admin|Super Admin')
          <li class="{{ request()->is('course*') || request()->is('category*') || request()->is('live-class*') ? 'active' : '' }}">
             <a href="#courses" data-toggle="collapse" aria-expanded="{{ request()->is('course*') || request()->is('category*') ? 'true' : 'false' }}" class="dropdown-toggle"><i class="fa fa-book purple_color"></i> <span>Courses</span></a>
             <ul class="collapse list-unstyled {{ request()->is('course*') || request()->is('category*') || request()->is('live-class*') ? 'show' : '' }}" id="courses">
                <li class="{{ request()->is('course') ? 'active' : '' }}"><a href="{{ route('course.index') }}">> <span>All Courses</span></a></li>
                <li class="{{ request()->is('category*') ? 'active' : '' }}"><a href="{{ route('category.index') }}">> <span>Categories</span></a></li>
-               <li class="{{ request()->is('instructors*') ? 'active' : '' }}"><a href="{{ route('instructor.index') }}">> <span>Instructors</span></a></li>
                <li class="{{ request()->is('live-class*') ? 'active' : '' }}"><a href="{{ route('live-class.index') }}">> <span>Live Classes</span></a></li>
                <li class="{{ request()->is('course/create') ? 'active' : '' }}"><a href="{{ route('course.create') }}">> <span>Add New Course</span></a></li>
             </ul>
          </li>
+         @endrole
          
          <!-- Subscription System -->
+         @role('Admin|Super Admin')
          <li><a href="#"><i class="fa fa-credit-card orange_color"></i> <span>Subscriptions</span></a></li>
+         @endrole
          
          @role('Student')
          <li class="{{ request()->is('my-courses*') ? 'active' : '' }}">
@@ -46,15 +49,18 @@
          @role('Instructor|Admin|Super Admin')
          <li>
             <a href="#students" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-users blue2_color"></i> <span>Students</span></a>
-            <ul class="collapse list-unstyled" id="students">
-               <li><a href="#">> <span>Student List</span></a></li>
-               <li><a href="#">> <span>Learning Progress</span></a></li>
+            <ul class="collapse list-unstyled {{ request()->is('students*') ? 'show' : '' }}" id="students">
+               <li class="{{ request()->is('students') ? 'active' : '' }}"><a href="{{ route('student.index') }}">> <span>All Students</span></a></li>
+               <li class="{{ request()->is('students/enrollments') ? 'active' : '' }}"><a href="{{ route('student.enrollments') }}">> <span>Enrolled Students</span></a></li>
+               <li class="{{ request()->is('students/progress') ? 'active' : '' }}"><a href="{{ route('student.progress') }}">> <span>Learning Progress</span></a></li>
             </ul>
          </li>
          @endrole
          
          <!-- Job Placement -->
+         @role('Admin|Super Admin')
          <li><a href="#"><i class="fa fa-briefcase blue1_color"></i> <span>Job Placement</span></a></li>
+         @endrole
          
          <!-- User & Role Management (Admin only) -->
          @role('Super Admin|Admin')
@@ -66,7 +72,9 @@
             </ul>
          </li>
          @endrole
+         @role('Admin|Super Admin')
          <li><a href="#"><i class="fa fa-cog yellow_color"></i> <span>Settings</span></a></li>
+         @endrole
       </ul>
    </div>
 </nav>

@@ -23,13 +23,8 @@ class StoreCourseRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'thumbnail' => 'nullable|image|max:2048',
-            'category_id' => 'required|exists:categories,id',
-            'career_path' => 'nullable|string|max:255',
-            'tags' => 'nullable|string',
-            'instructor_ids' => 'required|array',
-            'instructor_ids.*' => 'exists:users,id',
-            'status' => 'nullable|in:draft,published,pending_approval,rejected',
+            'thumbnail' => 'nullable|string|max:255',
+            'status' => 'nullable|in:draft,published',
             'is_featured' => 'nullable|boolean',
         ];
     }

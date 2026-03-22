@@ -46,15 +46,6 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Assign Instructors (Multiple)</label>
-                                <select name="instructor_ids[]" class="form-control" multiple style="height: 100px;">
-                                    @foreach($instructors as $instructor)
-                                        <option value="{{ $instructor->id }}" {{ (is_array(old('instructor_ids')) && in_array($instructor->id, old('instructor_ids'))) || (!old('instructor_ids') && $instructor->id == auth()->id()) ? 'selected' : '' }}>{{ $instructor->name }}</option>
-                                    @endforeach
-                                </select>
-                                <small class="form-text text-muted text-info">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
-                            </div>
-                            <div class="form-group">
                                 <label>Career Path (e.g. Web Development)</label>
                                 <input type="text" name="career_path" class="form-control" placeholder="Optional" value="{{ old('career_path') }}">
                             </div>

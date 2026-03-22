@@ -25,7 +25,7 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-        $filters = $request->only(['status', 'category_id', 'search']);
+        $filters = $request->only(['status', 'category_id']);
         if (auth()->user()->hasRole('Instructor')) {
             $filters['instructor_id'] = auth()->id();
         }
@@ -40,17 +40,7 @@ class CourseController extends Controller
     public function create()
     {
         $categories = Category::all();
-        $instructors = \App\Models\User::role('Instructor')->get();
-        return view('backend.pages.courses.create', compact('categories', 'instructors'));
-    }
-
-    /**
-     * Display the specified course details.
-     */
-    public function show(Course $course)
-    {
-        $course->load(['category', 'instructor', 'sections.lessons', 'batches', 'reviews.user']);
-        return view('backend.pages.courses.show', compact('course'));
+        return view('backend.pages.courses.create', compact('categories'));
     }
 
     /**
@@ -70,8 +60,7 @@ class CourseController extends Controller
     public function edit(Course $course)
     {
         $categories = Category::all();
-        $instructors = \App\Models\User::role('Instructor')->get();
-        return view('backend.pages.courses.edit', compact('course', 'categories', 'instructors'));
+        return view('backend.pages.courses.edit', compact('course', 'categories'));
     }
 
     /**

@@ -1,50 +1,47 @@
-@extends('auth.layouts.auth')
+@extends('frontend.layouts.auth')
 
 @section('title', 'Login')
+@section('heading', 'Welcome Back!')
 
 @section('content')
 <form method="POST" action="{{ route('login') }}">
     @csrf
-    <fieldset>
-       <div class="field">
-          <label class="label_field">Email Address</label>
-          <input type="email" name="email" placeholder="E-mail" value="{{ old('email') }}" required autofocus />
-          @error('email')
-              <span class="text-danger">{{ $message }}</span>
-          @enderror
-       </div>
-       <div class="field">
-          <label class="label_field">Password</label>
-          <input type="password" name="password" placeholder="Password" value="password" required autocomplete="current-password" />
-          @error('password')
-              <span class="text-danger">{{ $message }}</span>
-          @enderror
-       </div>
-       <div class="field">
-          <label class="label_field hidden">hidden label</label>
-          <label class="form-check-label">
-             <input type="checkbox" name="remember" class="form-check-input"> Remember Me
-          </label>
-          @if (Route::has('password.request'))
-              <a class="forgot" href="{{ route('password.request') }}">Forgotten Password?</a>
-          @endif
-       </div>
-       <div class="field margin_0">
-          <label class="label_field hidden">hidden label</label>
-          <button class="main_bt">Sign In</button>
-       </div>
+    <div class="mb-3">
+        <label class="form-label small fw-bold">Email Address</label>
+        <div class="input-group">
+            <span class="input-group-text bg-light border-0"><i class="fa fa-envelope text-primary small"></i></span>
+            <input type="email" name="email" class="form-control border-0 bg-light" placeholder="email@example.com" value="{{ old('email') }}" required autofocus>
+        </div>
+        @error('email')
+            <span class="text-danger small">{{ $message }}</span>
+        @enderror
+    </div>
 
-       <div class="field mt-3">
-          <div class="text-center">
-             <p>Or sign in with:</p>
-             <div class="social_login_buttons d-flex justify-content-center">
-                <a href="{{ route('social.redirect', 'google') }}" class="btn btn-outline-danger mx-1"><i class="fa fa-google"></i></a>
-                <a href="{{ route('social.redirect', 'facebook') }}" class="btn btn-outline-primary mx-1"><i class="fa fa-facebook"></i></a>
-                <a href="{{ route('social.redirect', 'linkedin') }}" class="btn btn-outline-info mx-1"><i class="fa fa-linkedin"></i></a>
-             </div>
-          </div>
-       </div>
-    </fieldset>
+    <div class="mb-3">
+        <label class="form-label small fw-bold d-flex justify-content-between">
+            Password
+            <a href="{{ route('password.request') }}" class="text-primary xsmall text-decoration-none fw-normal">Forgot?</a>
+        </label>
+        <div class="input-group">
+            <span class="input-group-text bg-light border-0"><i class="fa fa-lock text-primary small"></i></span>
+            <input type="password" name="password" class="form-control border-0 bg-light" placeholder="••••••••" required>
+        </div>
+        @error('password')
+            <span class="text-danger small">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <div class="mb-4 d-flex align-items-center">
+        <div class="form-check small">
+            <input type="checkbox" name="remember" class="form-check-input" id="rememberMe">
+            <label class="form-check-label text-muted" for="rememberMe">Remember for 30 days</label>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 shadow-sm">Sign In <i class="fa fa-arrow-right ms-2"></i></button>
 </form>
+@endsection
 
+@section('footer')
+<p class="mb-0 text-muted small">Don't have an account? <a href="{{ route('register') }}" class="text-primary fw-bold text-decoration-none">Sign Up</a></p>
 @endsection

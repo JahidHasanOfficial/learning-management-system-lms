@@ -28,11 +28,7 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
-        if ($user->status === 'pending') {
-            Auth::logout();
-            return redirect()->route('otp.verify', ['email' => $user->email])
-                ->with('status', 'Your account is pending verification. Please enter the OTP.');
-        }
+        $user = auth()->user();
 
         if ($user->status === 'suspended') {
             Auth::logout();

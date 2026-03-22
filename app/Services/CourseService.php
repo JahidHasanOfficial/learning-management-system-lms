@@ -27,10 +27,6 @@ class CourseService
             $query->where('instructor_id', $filters['instructor_id']);
         }
 
-        if (isset($filters['search'])) {
-            $query->where('title', 'LIKE', '%' . $filters['search'] . '%');
-        }
-
         return $query->latest()->paginate(10);
     }
 
@@ -40,22 +36,13 @@ class CourseService
     public function storeCourse(array $data)
     {
         $data['slug'] = Str::slug($data['title']);
+        $data['instructor_id'] = Auth::id() ?? $data['instructor_id'];
+
         if (isset($data['thumbnail']) && $data['thumbnail'] instanceof \Illuminate\Http\UploadedFile) {
             $data['thumbnail'] = \App\Helpers\ImageHelper::create($data['thumbnail'], 'courses');
         }
-
-        $instructor_ids = $data['instructor_ids'] ?? [];
-        unset($data['instructor_ids']);
-
-        $data['instructor_id'] = $instructor_ids[0] ?? Auth::id();
-
-        $course = Course::create($data);
         
-        if (!empty($instructor_ids)) {
-            $course->instructors()->sync($instructor_ids);
-        }
-
-        return $course;
+        return Course::create($data);
     }
 
     /**
@@ -65,14 +52,6 @@ class CourseService
     {
         if (isset($data['title'])) {
             $data['slug'] = Str::slug($data['title']);
-        }
-
-        $instructor_ids = $data['instructor_ids'] ?? [];
-        unset($data['instructor_ids']);
-
-        if (!empty($instructor_ids)) {
-            $data['instructor_id'] = $instructor_ids[0];
-            $course->instructors()->sync($instructor_ids);
         }
         
         $course->update($data);

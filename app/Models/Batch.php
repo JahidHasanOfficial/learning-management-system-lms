@@ -10,7 +10,6 @@ class Batch extends Model
     use HasFactory;
 
     protected $fillable = ['course_id', 'name', 'start_date', 'end_date', 'capacity', 'status'];
-    protected $casts = ['start_date' => 'datetime', 'end_date' => 'datetime'];
 
     public function course()
     {
